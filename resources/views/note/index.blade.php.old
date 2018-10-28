@@ -1,0 +1,21 @@
+@extends('layout.mylayout')
+@section('content')
+<div class="container">
+
+            
+<div class="col d-flex justify-content-center">
+<ul class="list-group text-center">
+   @foreach ($notes as $note)
+     <a href="{{ action('NotesController@edit',['id'=>$note->id]) }}"  class="list-group-item list-group-item-action">{{$note->title}}</a>
+   @endforeach
+</ul>
+</div>
+<br>
+<div class="col d-flex justify-content-center">
+{{ $notes->links() }}
+</div>
+</div>
+
+    
+
+@endsection
