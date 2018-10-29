@@ -15,11 +15,10 @@ use Faker\Generator as Faker;
 
 $factory->define(App\Note::class, function (Faker $faker) {
     return [
-        'title' => $faker->name,
-        'body' => $faker->text,
+        'title' => ucfirst($faker->sentence(5,true)),
+        'body' => $faker->paragraph(10),
         'user_id' => App\User::all()->random()->id,
         'folder_id' => App\Folder::all()->random()->id,
-        'category_id' => App\Category::all()->random()->id,
 
-    ];
+            ];
 });

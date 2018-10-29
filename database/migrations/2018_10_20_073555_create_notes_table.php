@@ -21,7 +21,7 @@ class CreateNotesTable extends Migration
             $table->text('body');
             $table->integer('user_id')->unsigned();
             $table->integer('folder_id')->unsigned();
-            $table->integer('category_id')->unsigned();
+
         });
     }
 

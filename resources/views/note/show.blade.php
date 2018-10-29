@@ -9,7 +9,10 @@
          <span class="card-text">{!! $note->body !!}</span>
        </div>
        <div class="card-footer">
-         <h6 class="card-subtitle mb-2 text-muted">Category : {{ $category_name}}</h6>
+         @foreach ($categories as $category)
+           <h6 class="card-subtitle mb-2 text-muted">Category : {{ $category->name}}</h6>
+         @endforeach
+
          <h6 class="card-subtitle mb-2 text-muted">Folder : {{ $folder_name}}</h6>
          <a href="{{ route('note.index') }}" class="card-link" >Go Back</a>
        </div>

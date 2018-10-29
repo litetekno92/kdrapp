@@ -31,6 +31,7 @@ public function sluggable()
       return $this->belongsTo('App\Folder');
     }
   public function categories () {
-      return $this->belongsToMany('App\Category');
+    return $this->belongsToMany('App\Category');
+    //    return $this->belongsToMany(Category::class,'category_note','category_id','note_id');
     }
 }

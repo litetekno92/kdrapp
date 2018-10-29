@@ -13,12 +13,12 @@ class NotesController extends Controller
     /**
  * Enforce middleware.
  */
-public function __construct()
-{
-    $this->middleware('auth', ['only' => ['create', 'store', 'edit', 'delete']]);
-    // Alternativly
+    public function __construct()
+    {
+        $this->middleware('auth', ['only' => ['create', 'store', 'edit', 'delete']]);
+        // Alternativly
     //$this->middleware('auth', ['except' => ['index', 'show']]);
-}
+    }
     /**
      * Display a listing of the resource.
      *
@@ -27,8 +27,9 @@ public function __construct()
     public function index()
     {
         //  $notes=Note::all()->paginate(15);
-        $notes = Note::paginate(8);
-        return view('note.index', compact('notes', $notes));
+        //  $notes = Note::paginate(8);
+        $notes = Note::with('categories')->paginate(8);
+        return view('note.index', compact('notes'));
     }
 
     /**
@@ -56,9 +57,10 @@ public function __construct()
         $note= new Note;
         $note->title=$request->get('title');
         $note->body=$request->get('body');
-        $note->category_id=$request->get('category');
+        $array_of_categories = $request->category_id;
         $note->folder_id=$request->get('folder');
-        $note->user_id=1;
+        $note->user_id=Auth::id();
+        $note->categories()->associate($array_of_categories);
         $note->save();
         return redirect('note')->with('success', 'Information has been added');
 
@@ -73,13 +75,23 @@ public function __construct()
      */
     public function show($id)
     {
-      $note=Note::find($id);
-      $category_name=Category::find($note->category_id)->name;
-      $folder_name=Folder::find($note->folder_id)->name;
-      //$folder_name=Folder::find($folder->id)->name;
-      //$folders=Folder::All();
-      return view('note.show', compact('note', 'category_name', 'folder_name'));
-
+        $note=Note::find($id);
+        //$category_name=Category::find($note->category_id)->name;
+        $folder_name=Folder::find($note->folder_id)->name;
+        //$categories=Category::pluck('name', 'id');
+       //  $categories = $note->categories()->get();
+        $categories = $note->categories;
+      //  dd($categories);
+        /*foreach ($categories as $category) {
+          print_r($category->name);
+          echo "<BR>";
+          echo "_________________";
+          echo "<BR>";
+        }
+        dd($id);*/
+        //$categories = Category::with('notes')->where(['note_id' => $id])->get();
+        //$folders=Folder::pluck('name', 'id');
+        return view('note.show', compact('note', 'categories', 'folder_name'));
     }
 
 
@@ -92,10 +104,11 @@ public function __construct()
     public function edit($id)
     //public function edit(Note $note)
     {
-      $note=Note::find($id);
-      $categories=Category::All();
-      $folders=Folder::All();
-      return view('note.edit', compact('note', 'categories', 'folders'));
+        $note=Note::find($id);
+        $categories=Category::pluck('name', 'id');
+        $folders=Folder::pluck('name', 'id');
+
+        return view('note.edit', compact('note', 'categories', 'folders'));
     }
 
     /**
@@ -110,9 +123,13 @@ public function __construct()
         $note=Note::find($id);
         $note->title=$request->get('title');
         $note->body=$request->get('body');
-        $note->category_id=$request->get('category');
-        $note->folder_id=$request->get('folder');
-        $note->user_id=1;
+        $array_of_categories = $request->category_id;
+
+
+
+        $note->folder_id=$request->get('folder_id');
+        $note->categories()->associate($array_of_categories);
+
         $note->update();
         return redirect('note')->with('success', 'Information has been updated');
         //

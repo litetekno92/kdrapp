@@ -19,11 +19,14 @@
         @else
         <h4 class="card-title">{{$note->title}}</h4>
         @endif
+
         @if($note->category_id==10)
         <span class="badge badge-primary">Social</span>
         @else
         <span class="badge badge-warning">Health</span>
         @endif
+
+
         <p class="card-text">{!! str_limit($note->body , $limit = 60, $end = '...') !!}</p>
       </div>
       <div class="card-footer">
@@ -32,6 +35,14 @@
         @if(Auth::id() == $note->user_id)
          <a href="{{ route('note.destroy', ['id'=>$note->id]) }}" class="card-link text-danger text-right" >X</a>
         @endif
+        <br>Category :
+        @foreach ($note->categories as $category)
+        <p class="card-text">
+
+          {{ $category->name }}
+        </p>
+
+        @endforeach
          </span>
        </div>
     </div>
