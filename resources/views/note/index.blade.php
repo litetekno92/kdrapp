@@ -11,7 +11,7 @@
 <div class="row">
 <div class="card-columns">
    @foreach ($notes as $note)
-    <div class="card">
+    <div class="card z-depth-5">
         <img class="card-img-top img-fluid" src="https://fillmurray.com/{{ 400+$note->user_id}}/300">
       <div class="card-block">
         @if(Auth::id() == $note->user_id)
