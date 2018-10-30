@@ -1,10 +1,9 @@
 @extends('layout.mylayout')
 @section('content')
 <div class="container">
+  @include('flash::message')
 <div class="col d-flex justify-content-center">
-@if ($errors->any())
-        {{ implode('', $errors->all('<div>:message</div>')) }}
-@endif
+
 <h2 class="text-primary"><a href="{{ action('NotesController@create') }}">Create a note</a></h2>
 </div>
             
@@ -15,7 +14,7 @@
         <img class="card-img-top img-fluid" src="https://fillmurray.com/{{ 400+$note->user_id}}/300">
       <div class="card-block">
         @if(Auth::id() == $note->user_id)
-        <h4 class="card-title"><a href="{{ action('NotesController@edit',['id'=>$note->id]) }}"  class="list-group-item-action">{{$note->title}}</a></h4>
+        <h4 class="card-title"><a href="{{ action('NotesController@edit',['id'=>$note->id]) }}" class="btn btn-info"  class="list-group-item list-group-item-action">{{$note->title}}</a></h4>
         @else
         <h4 class="card-title">{{$note->title}}</h4>
         @endif
@@ -33,12 +32,11 @@
          <span>
            {{ $note->user->name }}
         @if(Auth::id() == $note->user_id)
-         <a href="{{ route('note.destroy', ['id'=>$note->id]) }}" class="card-link text-danger text-right" >X</a>
+          <a href="{{ route('notedel', ['id'=>$note->id]) }}" class="card-link text-danger text-right" ><webicon icon="typicons:trash" style="position: relative; display: inline-block; 	height: 2rem;	width: 2rem;	top: 5px;	margin-right: .25rem;"/></a>
         @endif
         <br>Category :
         @foreach ($note->categories as $category)
         <p class="card-text">
-
           {{ $category->name }}
         </p>
 
