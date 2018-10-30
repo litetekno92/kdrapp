@@ -29,6 +29,7 @@ class NotesController extends Controller
         //  $notes=Note::all()->paginate(15);
         //  $notes = Note::paginate(8);
         $notes = Note::with('categories')->paginate(8);
+        // flash('Welcome To KdrApp')->success();
         return view('note.index', compact('notes'));
     }
 
@@ -59,12 +60,14 @@ class NotesController extends Controller
         $note->body=$request->get('body');
         $array_of_categories = $request->category_id;
         $note->folder_id=$request->get('folder');
-        $note->user_id=Auth::id();
-        $note->categories()->associate($array_of_categories);
+        $note->user_id=\Auth::id();
+        $note->categories()->attach($array_of_categories);
         $note->save();
-        return redirect('note')->with('success', 'Information has been added');
+        flash('Information has been added')->success();
+        //return redirect('note')->with('success', 'Information has been added');
+        return redirect('note');
 
-        //Note::create($request);
+        //Note::create($request->All());
     }
 
     /**
@@ -128,11 +131,25 @@ class NotesController extends Controller
 
 
         $note->folder_id=$request->get('folder_id');
-        $note->categories()->associate($array_of_categories);
+        $note->categories()->sync($array_of_categories);
 
         $note->update();
-        return redirect('note')->with('success', 'Information has been updated');
+        flash('Information has been updated')->success();
+        return redirect('note');
         //
+    }
+
+    /**
+     * Confirm the removal the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function confDestroy($id)
+    {
+        $note=Note::find($id);
+        return view('note.delete', compact('note'));
+
     }
 
     /**
@@ -143,6 +160,10 @@ class NotesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $note=Note::find($id);
+        $note->delete();
+        flash('Information has been deleted')->success();
+        return redirect('note');
+
     }
 }

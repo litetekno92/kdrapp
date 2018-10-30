@@ -21,6 +21,7 @@ Route::get('/demo', function () {
     return view('demo');
 });
 
+Route::get('notedel/{note}', 'NotesController@confDestroy')->name('notedel');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
